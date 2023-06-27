@@ -11,11 +11,16 @@ import com.riseup.newsapplication.common_utils.Navigator
 import com.riseup.newsapplication.news_presentation.databinding.ActivityNewsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.lifecycle.lifecycleScope
+import com.riseup.newsapplication.common_utils.Activities
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NewsActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var provider: Navigator.Provider
     companion object {
         fun launchActivity(activity: Activity) {
             val intent = Intent(activity, NewsActivity::class.java)
@@ -44,10 +49,14 @@ class NewsActivity : AppCompatActivity() {
 
     private fun initView() {
         binding.rvArticles.adapter = newsAdapter
+        binding.ivGoToSearch.setOnClickListener{
+            provider.getActivities(Activities.SearchActivity).navigate(this)
+
+        }
     }
 
     private fun setObservers() {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             newsViewModel.newsArticle.collectLatest {
                 if (it.isLoading) {
                     binding.progressBar.visibility= View.VISIBLE

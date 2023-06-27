@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -28,10 +30,16 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
     implementation project(":common:common_utils")
+    implementation project(":search:search_domain")
+
+
     implementation Deps.core
     implementation Deps.appCompat
     implementation Deps.androidMaterial
@@ -39,4 +47,17 @@ dependencies {
     testImplementation TestImplementation.junit
     androidTestImplementation AndroidTestImplementation.junit
     androidTestImplementation AndroidTestImplementation.espresso
+
+    implementation 'com.google.dagger:hilt-android:2.44'
+    kapt 'com.google.dagger:hilt-compiler:2.44'
+
+    implementation(Coroutines.coroutineCore)
+    implementation(Coroutines.coroutineAndroid)
+    implementation(CoroutinesLifecycleScope.lifecycleViewModel)
+    implementation(CoroutinesLifecycleScope.lifeCycleRuntime)
+    implementation(Glide.glide)
+    kapt(Glide.annotationProcessor)
+
+    implementation (ViewModelDelegate.viewModelDeligate)
+    implementation CircularProgressBar.swipeRefresh
 }
